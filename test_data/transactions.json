@@ -1,0 +1,20 @@
+[
+    {
+        "type": "EXPENSE",
+        "amount": 1000.0,
+        "date": "2026-01-16T23:50:28.174811",
+        "description": "Initial Investment",
+        "related_id": null,
+        "quantity": 0.0,
+        "id": "bf31e532-b7e7-4764-8899-883fc7df03bc"
+    },
+    {
+        "type": "SALE",
+        "amount": 500.0,
+        "date": "2026-01-16T23:50:28.175644",
+        "description": "First Sale",
+        "related_id": null,
+        "quantity": 0.0,
+        "id": "c29fc876-1a80-47b5-8743-868f2850b198"
+    }
+]

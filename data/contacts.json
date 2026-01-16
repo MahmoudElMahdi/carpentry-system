@@ -1,0 +1,65 @@
+[
+    {
+        "name": "El-Nour Woods",
+        "role": "SUPPLIER",
+        "phone": "01012345678",
+        "email": "",
+        "address": "",
+        "current_balance": 0.0,
+        "id": "ce9e665a-f30d-438e-a3b9-bbd16cfe8d99"
+    },
+    {
+        "name": "Modern Paints Co.",
+        "role": "SUPPLIER",
+        "phone": "01123456789",
+        "email": "",
+        "address": "",
+        "current_balance": 0.0,
+        "id": "d4154b57-1a6a-4cfc-8581-6b13a14f7e38"
+    },
+    {
+        "name": "Hardware Pro",
+        "role": "SUPPLIER",
+        "phone": "01234567890",
+        "email": "",
+        "address": "",
+        "current_balance": 0.0,
+        "id": "426f1c45-4134-4f97-95d1-7866a2b324b4"
+    },
+    {
+        "name": "Ahmed Hassan",
+        "role": "EMPLOYEE",
+        "phone": "0100000001",
+        "email": "",
+        "address": "",
+        "current_balance": 0.0,
+        "id": "c53e7290-2f47-4831-bcc4-ecf4453a870d"
+    },
+    {
+        "name": "Mohamed Ali",
+        "role": "EMPLOYEE",
+        "phone": "0100000002",
+        "email": "",
+        "address": "",
+        "current_balance": 0.0,
+        "id": "4f5a23f6-7393-40da-8633-0df9c154f62a"
+    },
+    {
+        "name": "Dr. Tarek",
+        "role": "CUSTOMER",
+        "phone": "0122222222",
+        "email": "",
+        "address": "",
+        "current_balance": 0.0,
+        "id": "d9541ac7-c7c6-4083-b264-72293cf0d699"
+    },
+    {
+        "name": "Eng. Sarah",
+        "role": "CUSTOMER",
+        "phone": "0155555555",
+        "email": "",
+        "address": "",
+        "current_balance": 0.0,
+        "id": "d1c515ca-3bfc-4565-b887-670082494abe"
+    }
+]

@@ -1,0 +1,30 @@
+[
+    {
+        "name": "Swedish Wood 2x4",
+        "unit": "m3",
+        "cost_per_unit": 12000.0,
+        "stock_quantity": 0.0,
+        "id": "0108f575-bd65-46e8-848d-a191779d94cd"
+    },
+    {
+        "name": "Plywood 18mm",
+        "unit": "sheet",
+        "cost_per_unit": 850.0,
+        "stock_quantity": 0.0,
+        "id": "75d3560e-414e-4446-8ae8-6a7b8b350891"
+    },
+    {
+        "name": "White Paint",
+        "unit": "kg",
+        "cost_per_unit": 150.0,
+        "stock_quantity": 0.0,
+        "id": "c76b9806-63e5-4a64-926e-6f1a38f25564"
+    },
+    {
+        "name": "Screws 5cm",
+        "unit": "box",
+        "cost_per_unit": 200.0,
+        "stock_quantity": 0.0,
+        "id": "2d5504ec-c1a9-44cc-b35b-aa25bda44dbf"
+    }
+]

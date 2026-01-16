@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Inventory Management</h1>
+
+<div class="card">
+    <h2>Add New Item</h2>
+    <form action="/inventory/add" method="post">
+        <select name="type">
+            <option value="material">Raw Material</option>
+            <option value="product">Finished Product</option>
+        </select>
+        <input type="text" name="name" placeholder="Item Name" required>
+        <input type="text" name="unit_or_price" placeholder="Unit (e.g. m3) OR Price" required>
+        <input type="number" name="cost" step="0.01" placeholder="Cost per Unit (Materials only)">
+        <button type="submit" class="btn">Add Item</button>
+    </form>
+</div>
+
+<div class="card">
+    <h2>Raw Materials</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Unit</th>
+                <th>Cost</th>
+                <th>Stock</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for m in materials %}
+            <tr>
+                <td>{{ m.name }}</td>
+                <td>{{ m.unit }}</td>
+                <td>{{ m.cost_per_unit }}</td>
+                <td>{{ m.stock_quantity }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h2>Finished Products</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Stock</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in products %}
+            <tr>
+                <td>{{ p.name }}</td>
+                <td>{{ p.sale_price }}</td>
+                <td>{{ p.stock_quantity }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

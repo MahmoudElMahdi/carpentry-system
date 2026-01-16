@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="header-split">
+    <h1>Sales Projects & Contracts</h1>
+    <div class="actions">
+        <button class="btn" onclick="document.getElementById('new-project-modal').style.display='block'">+ New Project</button>
+    </div>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-value">{{ tax_report.net_vat }}</div>
+        <div class="stat-label">Net VAT Payable</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-value">{{ active_projects_count }}</div>
+        <div class="stat-label">Active Projects</div>
+    </div>
+</div>
+
+<div class="card">
+    <h2>Active Projects</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Project Name</th>
+                <th>Total Value</th>
+                <th>Paid</th>
+                <th>Remaining</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in project_summaries %}
+            <tr>
+                <td>{{ p.project.name }}</td>
+                <td>{{ p.project.total_value }}</td>
+                <td style="color: var(--success)">{{ p.paid }}</td>
+                <td style="color: {% if p.remaining > 0 %}var(--danger){% else %}var(--text-secondary){% endif %}">
+                    {{ p.remaining }}
+                </td>
+                <td><span class="badge">{{ p.project.status }}</span></td>
+                <td>
+                    <button class="btn-sm" onclick="openPaymentModal('{{ p.project.id }}', '{{ p.project.name }}')">Record Payment</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- New Project Modal -->
+<div id="new-project-modal" class="modal">
+    <div class="modal-content card">
+        <span class="close" onclick="document.getElementById('new-project-modal').style.display='none'">&times;</span>
+        <h2>New Contract</h2>
+        <form action="/projects/add" method="post">
+            <div class="form-group">
+                <label>Customer</label>
+                <select name="customer_id" required>
+                    {% for c in customers %}
+                    <option value="{{ c.id }}">{{ c.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <input type="text" name="name" placeholder="Project Name (e.g. Villa A Kitchen)" required>
+            <input type="number" name="total_value" step="0.01" placeholder="Total Contract Value" required>
+            <input type="text" name="description" placeholder="Description/Notes">
+            <button type="submit" class="btn">Create Project</button>
+        </form>
+    </div>
+</div>
+
+<!-- Project Payment Modal -->
+<div id="payment-modal" class="modal">
+    <div class="modal-content card">
+        <span class="close" onclick="document.getElementById('payment-modal').style.display='none'">&times;</span>
+        <h2>Record Payment for <span id="payment-project-name"></span></h2>
+        <form action="/finance/transaction" method="post">
+            <input type="hidden" name="type" value="SALE">
+            <input type="hidden" name="category" value="Project Payment">
+            <input type="hidden" name="related_id" id="payment-project-id"> <!-- Links transaction to project -->
+            
+            <input type="number" name="amount" step="0.01" placeholder="Amount Received" required>
+            <input type="number" name="tax_amount" step="0.01" placeholder="VAT included (if any)" value="0.0">
+            
+            <div class="form-group">
+                <label>Payment Method</label>
+                <select name="payment_method">
+                    <option value="Cash">Cash</option>
+                    <option value="Bank Transfer">Bank Transfer</option>
+                    <option value="Cheque">Cheque</option>
+                </select>
+            </div>
+            
+            <input type="text" name="description" placeholder="Payment Description (e.g. Deposit)" required>
+            
+            <button type="submit" class="btn">Record Payment</button>
+        </form>
+    </div>
+</div>
+
+<script>
+function openPaymentModal(id, name) {
+    document.getElementById('payment-project-id').value = id;
+    document.getElementById('payment-project-name').innerText = name;
+    document.getElementById('payment-modal').style.display = 'block';
+}
+</script>
+{% endblock %}

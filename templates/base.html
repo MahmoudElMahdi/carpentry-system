@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carpentry System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=6">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Mobile Header -->
+        <div class="mobile-header">
+            <div class="logo">CarpentrySys</div>
+            <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+        </div>
+
+        <nav class="sidebar" id="sidebar">
+            <div class="logo">
+                <h2>CarpentrySys</h2>
+            </div>
+            <ul class="nav-links">
+                <li><a href="/">Dashboard</a></li>
+                <li><a href="/projects">Projects</a></li>
+                <li><a href="/inventory">Inventory</a></li>
+                <li><a href="/finance">Finance</a></li>
+            </ul>
+        </nav>
+        <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+        <main class="content">
+            <!-- Flash Messages -->
+            {% if success_msg %}
+            <div class="flash-message success">
+                {{ success_msg }}
+            </div>
+            {% endif %}
+            
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+    <div class="fab-container">
+        <button class="btn-fab" onclick="toggleTheme()" id="theme-btn" title="Toggle Theme">
+            🌙
+        </button>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+        }
+
+        const html = document.documentElement;
+        const themeBtn = document.getElementById('theme-btn');
+        
+        // Init
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        html.setAttribute('data-theme', savedTheme);
+        updateBtnIcon(savedTheme);
+
+        function toggleTheme() {
+            const current = html.getAttribute('data-theme');
+            const newTheme = current === 'dark' ? 'light' : 'dark';
+            
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateBtnIcon(newTheme);
+        }
+
+        function updateBtnIcon(theme) {
+            if(theme === 'dark') {
+                themeBtn.innerText = '☀️'; // Sun for "switch to light"
+                themeBtn.style.color = '#fbbf24';
+            } else {
+                themeBtn.innerText = '🌙'; // Moon for "switch to dark"
+                themeBtn.style.color = '#94a3b8';
+            }
+        }
+    </script>
+</body>
+</html>

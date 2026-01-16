@@ -1,0 +1,20 @@
+[
+    {
+        "name": "Villa Tarek Kitchen",
+        "customer_id": "d9541ac7-c7c6-4083-b264-72293cf0d699",
+        "total_value": 75000.0,
+        "start_date": "2026-01-17T00:23:06.407565",
+        "status": "Active",
+        "description": "Luxury kitchen with island",
+        "id": "dd7af9fc-8555-4d32-a7b0-9245b58f8d48"
+    },
+    {
+        "name": "Sarah Apartment Doors",
+        "customer_id": "d1c515ca-3bfc-4565-b887-670082494abe",
+        "total_value": 45000.0,
+        "start_date": "2026-01-17T00:23:06.408979",
+        "status": "Active",
+        "description": "10 interior doors",
+        "id": "05357424-ee1d-437d-8559-dae3b3fb0b50"
+    }
+]

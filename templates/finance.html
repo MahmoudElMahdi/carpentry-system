@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="header-split">
+    <h1>Finance & Unified Input</h1>
+    <div class="actions">
+        <button class="btn" onclick="document.getElementById('new-contact-modal').style.display='block'">+ New Contact</button>
+    </div>
+</div>
+
+<!-- Unified Input Form -->
+<div class="card">
+    <h2>Record New Entry</h2>
+    <form action="/finance/transaction" method="post" class="grid-form">
+        
+        <!-- Row 1: Type & Category -->
+        <div class="form-group">
+            <label>Transaction Type</label>
+            <select name="type" id="type-select" onchange="updateCategories()" required>
+                <option value="PURCHASE">Purchase (Out)</option>
+                <option value="EXPENSE">Expense (Out)</option>
+                <option value="PAYROLL">Payroll (Out)</option>
+                <option value="SALE">Sale (In)</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label>Category</label>
+            <select name="category" id="category-select">
+                <!-- Populated by JS -->
+                <option value="Raw Materials">Raw Materials</option>
+                <option value="Tools">Tools</option>
+            </select>
+        </div>
+
+        <!-- Row 2: Amount & Tax -->
+        <div class="form-group">
+            <label>Amount (Total)</label>
+            <input type="number" name="amount" step="0.01" required>
+        </div>
+        
+        <div class="form-group">
+            <label>Tax Amount (Included)</label>
+            <input type="number" name="tax_amount" step="0.01" value="0.0">
+        </div>
+
+        <!-- Row 3: Payment Details -->
+        <div class="form-group">
+            <label>Payment Source</label>
+            <select name="payment_source">
+                <option value="Company">Company Account</option>
+                <option value="Personal">Personal Funding (Owner)</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label>Payment Method</label>
+            <select name="payment_method">
+                <option value="Cash">Cash</option>
+                <option value="Bank Transfer">Bank Transfer</option>
+                <option value="Cheque">Cheque</option>
+            </select>
+        </div>
+
+        <!-- Row 4: Contact & Description -->
+        <div class="form-group">
+            <label>Related Contact</label>
+            <select name="contact_id">
+                <option value="">-- None --</option>
+                {% for c in contacts %}
+                <option value="{{ c.id }}">{{ c.name }} ({{ c.role }})</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="form-group full-width">
+            <label>Description</label>
+            <input type="text" name="description" placeholder="Details..." required>
+        </div>
+
+        <button type="submit" class="btn full-width">Record Transaction</button>
+    </form>
+</div>
+
+<!-- Recent Transactions Table -->
+<div class="card">
+    <h2>Recent Transactions</h2>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                    <th>Category</th>
+                    <th>Amount</th>
+                    <th>Source</th>
+                    <th>Contact</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for t in transactions %}
+                <tr class="{% if t.type == 'SALE' %}row-in{% else %}row-out{% endif %}">
+                    <td>{{ t.date[:10] }}</td>
+                    <td><span class="badge {{ t.type }}">{{ t.type }}</span></td>
+                    <td>{{ t.description }}</td>
+                    <td>{{ t.category }}</td>
+                    <td>{{ t.amount }}</td>
+                    <td>{{ t.payment_source }}</td>
+                    <td>{{ t.contact_id }}</td> <!-- ID for now, populate name later -->
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal for New Contact -->
+<div id="new-contact-modal" class="modal">
+    <div class="modal-content card">
+        <span class="close" onclick="document.getElementById('new-contact-modal').style.display='none'">&times;</span>
+        <h2>Add New Contact</h2>
+        <form action="/contacts/add" method="post">
+            <select name="role">
+                <option value="SUPPLIER">Supplier</option>
+                <option value="EMPLOYEE">Employee</option>
+                <option value="CUSTOMER">Customer</option>
+            </select>
+            <input type="text" name="name" placeholder="Name" required>
+            <input type="text" name="phone" placeholder="Phone">
+            <button type="submit" class="btn">Save Contact</button>
+        </form>
+    </div>
+</div>
+
+<script>
+function updateCategories() {
+    const type = document.getElementById('type-select').value;
+    const catSelect = document.getElementById('category-select');
+    catSelect.innerHTML = '';
+    
+    let options = [];
+    if(type === 'PURCHASE') options = ['Raw Materials', 'Tools', 'Consumables'];
+    else if(type === 'EXPENSE') options = ['Rent', 'Utilities', 'Maintenance', 'Transport'];
+    else if(type === 'PAYROLL') options = ['Salary', 'Advance', 'Bonus'];
+    else if(type === 'SALE') options = ['Project Payment', 'Contract Deposit'];
+    
+    options.forEach(opt => {
+        let el = document.createElement('option');
+        el.value = opt;
+        el.innerText = opt;
+        catSelect.appendChild(el);
+    });
+}
+// Init
+updateCategories();
+</script>
+{% endblock %}

@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="header-split">
+    <h1>Payroll Management</h1>
+    <div class="actions">
+        <!-- Re-use contact modal for adding employees? Or specific one? -->
+        <button class="btn" onclick="document.getElementById('new-contact-modal').style.display='block'">+ New Employee</button>
+    </div>
+</div>
+
+<div class="card">
+    <h2>Record Payroll / Advance</h2>
+    <form action="/finance/transaction" method="post" class="grid-form">
+        <input type="hidden" name="type" value="PAYROLL">
+        
+        <div class="form-group">
+            <label>Employee</label>
+            <select name="contact_id" required>
+                {% for e in employees %}
+                <option value="{{ e.id }}">{{ e.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Category</label>
+            <select name="category">
+                <option value="Salary">Monthly Salary</option>
+                <option value="Advance">Advance (Salaf)</option>
+                <option value="Bonus">Bonus</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Amount</label>
+            <input type="number" name="amount" step="0.01" required>
+        </div>
+        
+        <div class="form-group">
+            <label>Payment Source</label>
+            <select name="payment_source">
+                <option value="Company">Company Account</option>
+                <option value="Personal">Personal Funding</option>
+            </select>
+        </div>
+
+        <div class="form-group full-width">
+            <label>Notes</label>
+            <input type="text" name="description" placeholder="Month/Reason...">
+        </div>
+
+        <button type="submit" class="btn full-width">Record Payment</button>
+    </form>
+</div>
+
+<!-- Modal for New Contact (Reused structure or include shared logic) -->
+<div id="new-contact-modal" class="modal">
+    <div class="modal-content card">
+        <span class="close" onclick="document.getElementById('new-contact-modal').style.display='none'">&times;</span>
+        <h2>Add Global Contact</h2>
+        <form action="/contacts/add" method="post">
+            <select name="role">
+                <option value="EMPLOYEE" selected>Employee</option>
+                <option value="SUPPLIER">Supplier</option>
+            </select>
+            <input type="text" name="name" placeholder="Name" required>
+            <input type="text" name="phone" placeholder="Phone">
+            <button type="submit" class="btn">Save</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

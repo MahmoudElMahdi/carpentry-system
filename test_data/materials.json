@@ -1,0 +1,9 @@
+[
+    {
+        "name": "Wood",
+        "unit": "m3",
+        "cost_per_unit": 100.0,
+        "stock_quantity": 0.0,
+        "id": "eed09fb9-2e6c-4a44-93a3-e33e1a2461da"
+    }
+]

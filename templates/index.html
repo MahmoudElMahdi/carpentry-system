@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<h1>financial Dashboard</h1>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-value" style="color: var(--success)">{{ summary.net_profit }}</div>
+        <div class="stat-label">Net Profit (Revenue - Expenses)</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-value">{{ summary.cash_on_hand }}</div>
+        <div class="stat-label">Cash on Hand</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-value">{{ summary.total_revenue }}</div>
+        <div class="stat-label">Total Revenue</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-value" style="color: var(--danger)">{{ summary.total_expenses }}</div>
+        <div class="stat-label">Total Expenses</div>
+    </div>
+</div>
+
+<!-- Chart 1: Trend (Full Width) -->
+<div class="card">
+    <h2>Cash Flow Trend</h2>
+    <div style="height: 350px;">
+        <canvas id="trendChart"></canvas>
+    </div>
+</div>
+
+<div class="grid-form">
+    <!-- Chart 2: Expense Breakdown -->
+    <div class="card">
+        <h2>Expenses</h2>
+        <div style="height: 300px; display: flex; justify-content: center;">
+            <canvas id="expenseChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="card">
+        <h2>Recent Activity</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Type</th>
+                    <th>Desc</th>
+                    <th>Amt</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for t in recent_transactions %}
+                <tr>
+                    <td>{{ t.date[:10] }}</td>
+                    <td><span class="badge {{ t.type }}">{{ t.type }}</span></td>
+                    <td>{{ t.description }}</td>
+                    <td>{{ t.amount }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    // Data passed from Backend
+    const trendData = {{ trends | tojson }};
+    const expenseData = {{ expense_breakdown | tojson }};
+
+    // Chart 1: Trend
+    new Chart(document.getElementById('trendChart'), {
+        type: 'bar',
+        data: {
+            labels: trendData.labels,
+            datasets: [
+                { label: 'Income', data: trendData.income, backgroundColor: '#10b981', borderRadius: 4 },
+                { label: 'Expense', data: trendData.expense, backgroundColor: '#ef4444', borderRadius: 4 }
+            ]
+        },
+        options: { 
+            responsive: true, 
+            maintainAspectRatio: false,
+            plugins: { legend: { position: 'top', labels: { usePointStyle: true, color: '#94a3b8' } } },
+            scales: {
+                y: { grid: { color: 'rgba(148, 163, 184, 0.1)' }, ticks: { color: '#94a3b8' } },
+                x: { grid: { display: false }, ticks: { color: '#94a3b8' } }
+            }
+        }
+    });
+
+    // Chart 2: Breakdown
+    new Chart(document.getElementById('expenseChart'), {
+        type: 'doughnut',
+        data: {
+            labels: Object.keys(expenseData),
+            datasets: [{
+                data: Object.values(expenseData),
+                backgroundColor: [
+                    '#3b82f6', // Blue
+                    '#8b5cf6', // Violet
+                    '#06b6d4', // Cyan
+                    '#f43f5e', // Rose
+                    '#eab308', // Yellow
+                    '#64748b'  // Slate
+                ],
+                borderWidth: 0
+            }]
+        },
+        options: { 
+            responsive: true, 
+            maintainAspectRatio: false,
+            plugins: { 
+                legend: { position: 'right', labels: { color: '#94a3b8', usePointStyle: true, padding: 20 } } 
+            }
+        }
+    });
+</script>
+{% endblock %}
