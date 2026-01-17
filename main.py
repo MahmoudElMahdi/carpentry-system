@@ -12,8 +12,8 @@ app = FastAPI()
 
 # Setup Services
 import os
-db_path = os.getenv("DB_PATH", "data")  # Use /data on Render, data locally
-storage = Storage(db_path=db_path)
+db_file = os.getenv("DB_PATH", "db/data.json")  # Use consolidated data file
+storage = Storage(db_path=db_file)
 inventory_service = InventoryService(storage)
 finance_service = FinanceService(storage)
 sales_service = SalesService(storage)
@@ -145,31 +145,32 @@ async def add_contact(
 ):
     finance_service.add_contact(name, role, phone)
     return RedirectResponse(url="/finance?success_msg=Contact+Added", status_code=303)
+
+# Admin endpoint to load test data from db/data.json
 @app.get("/admin/seed-data")
 async def seed_test_data():
-    """Populate database with test data"""
-    import random
-    from datetime import datetime, timedelta
+    """Load existing test data from db/data.json to the volume"""
+    import json
+    import shutil
     
-    # Clear existing
-    storage.save("transactions", [])
-    
-    # Generate 50 test transactions
-    for i in range(50):
-        date = (datetime.now() - timedelta(days=random.randint(0, 90))).strftime("%Y-%m-%d")
-        is_sale = random.random() < 0.4
+    try:
+        # Path to the test data file in your Git repo
+        source_file = "db/data.json"
         
-        finance_service.record_transaction(
-            type="SALE" if is_sale else "EXPENSE",
-            amount=float(random.randint(100, 5000)),
-            description=f"Test {'Sale' if is_sale else 'Expense'} {i}",
-            category=random.choice(["Raw Materials", "Rent", "Project Payment"]),
-            payment_method="Cash",
-            payment_source="Company",
-            tax_amount=0.0,
-            contact_id=None,
-            related_id=None
-        )
-    
-    return {"message": f"Added 50 test transactions!"}
+        # Read the test data
+        with open(source_file, 'r') as f:
+            test_data = json.load(f)
+        
+        # Copy each collection to storage
+        for collection_name, items in test_data.items():
+            if items:  # Only save if there's data
+                storage.save(collection_name, items)
+        
+        return {
+            "message": "Successfully loaded test data!",
+            "collections": list(test_data.keys()),
+            "total_items": sum(len(items) for items in test_data.values())
+        }
+    except Exception as e:
+        return {"error": str(e)}
 
