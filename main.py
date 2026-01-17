@@ -145,3 +145,31 @@ async def add_contact(
 ):
     finance_service.add_contact(name, role, phone)
     return RedirectResponse(url="/finance?success_msg=Contact+Added", status_code=303)
+@app.get("/admin/seed-data")
+async def seed_test_data():
+    """Populate database with test data"""
+    import random
+    from datetime import datetime, timedelta
+    
+    # Clear existing
+    storage.save("transactions", [])
+    
+    # Generate 50 test transactions
+    for i in range(50):
+        date = (datetime.now() - timedelta(days=random.randint(0, 90))).strftime("%Y-%m-%d")
+        is_sale = random.random() < 0.4
+        
+        finance_service.record_transaction(
+            type="SALE" if is_sale else "EXPENSE",
+            amount=float(random.randint(100, 5000)),
+            description=f"Test {'Sale' if is_sale else 'Expense'} {i}",
+            category=random.choice(["Raw Materials", "Rent", "Project Payment"]),
+            payment_method="Cash",
+            payment_source="Company",
+            tax_amount=0.0,
+            contact_id=None,
+            related_id=None
+        )
+    
+    return {"message": f"Added 50 test transactions!"}
+
